@@ -1,5 +1,71 @@
-// 01) Implementar a estrutura da Pilha baseada em vetores, devendo possuir os métodos
-public class {
-  private Integer[] vetor;
-  private int capacidade = 10;
-  private int tamanho;
+public class Pilha {
+
+  // Atributos da classe
+  private int[] elementos;
+  private int topo;
+  private int capacidade;
+
+  // Construtor da pilha, inicializando a capacidade e o topo
+  public Pilha() {
+      this.capacidade = 10; // Capacidade inicial da pilha
+      this.elementos = new int[this.capacidade];
+      this.topo = -1; // A pilha começa vazia, logo topo é -1
+  }
+
+  // Método para empilhar (inserir um elemento no topo da pilha)
+  public void empilhar(int valor) {
+      if (topo == capacidade - 1) {
+          // Caso a pilha esteja cheia, aumenta a capacidade
+          aumentarCapacidade();
+      }
+      elementos[++topo] = valor;
+  }
+
+  // Método para desempilhar (remover o elemento do topo da pilha)
+  public int desempilhar() {
+      if (estaVazia()) {
+          throw new IllegalStateException("Pilha está vazia!");
+      }
+      return elementos[topo--];
+  }
+
+  // Método para verificar se a pilha está vazia
+  public boolean estaVazia() {
+      return topo == -1;
+  }
+
+  // Método para aumentar a capacidade da pilha caso ela esteja cheia
+  private void aumentarCapacidade() {
+      capacidade *= 2; // Dobrar a capacidade
+      int[] novoVetor = new int[capacidade];
+      for (int i = 0; i <= topo; i++) {
+          novoVetor[i] = elementos[i];
+      }
+      elementos = novoVetor;
+  }
+
+  // Método para visualizar o topo da pilha sem remover o elemento
+  public int topo() {
+      if (estaVazia()) {
+          throw new IllegalStateException("Pilha está vazia!");
+      }
+      return elementos[topo];
+  }
+
+  public class Main {
+    public static void main(String[] args) {
+        Pilha pilha = new Pilha();
+
+        pilha.empilhar(10);
+        pilha.empilhar(20);
+        pilha.empilhar(30);
+
+        System.out.println("Topo da pilha: " + pilha.topo()); // Saída: 30
+
+        System.out.println("Desempilhado: " + pilha.desempilhar()); // Saída: 30
+        System.out.println("Desempilhado: " + pilha.desempilhar()); // Saída: 20
+
+        System.out.println("Topo da pilha após desempilhar: " + pilha.topo()); // Saída: 10
+    }
+}
+}
