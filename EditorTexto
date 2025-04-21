@@ -1,0 +1,82 @@
+import java.util.Stack;
+
+public class EditorTexto {
+
+    private Stack<String> pilhaDesfazer;
+    private Stack<String> pilhaRefazer;
+    private String textoAtual;
+    private int capacidade; // Capacidade máxima do histórico
+
+    public EditorTexto(int capacidade) {
+        this.capacidade = capacidade;
+        this.pilhaDesfazer = new Stack<>();
+        this.pilhaRefazer = new Stack<>();
+        this.textoAtual = "";
+    }
+
+    public void inserirTexto(String novoTexto) {
+        if (pilhaDesfazer.size() == capacidade) {
+            pilhaDesfazer.remove(0); // Remove o estado mais antigo se atingir a capacidade máxima
+        }
+        pilhaDesfazer.push(textoAtual);
+        pilhaRefazer.clear(); // Limpa a pilha de refazer ao realizar uma nova ação
+        this.textoAtual = novoTexto;
+        System.out.println("Texto inserido: " + textoAtual);
+    }
+
+    public void desfazer() {
+        if (!pilhaDesfazer.isEmpty()) {
+            if (pilhaRefazer.size() == capacidade) {
+                pilhaRefazer.remove(0); // Remove o estado mais antigo se atingir a capacidade máxima
+            }
+            pilhaRefazer.push(textoAtual);
+            this.textoAtual = pilhaDesfazer.pop();
+            System.out.println("Desfeito. Texto atual: " + textoAtual);
+        } else {
+            System.out.println("Nada para desfazer.");
+        }
+    }
+
+    public void refazer() {
+        if (!pilhaRefazer.isEmpty()) {
+            if (pilhaDesfazer.size() == capacidade) {
+                pilhaDesfazer.remove(0); // Remove o estado mais antigo se atingir a capacidade máxima
+            }
+            pilhaDesfazer.push(textoAtual);
+            this.textoAtual = pilhaRefazer.pop();
+            System.out.println("Refeito. Texto atual: " + textoAtual);
+        } else {
+            System.out.println("Nada para refazer.");
+        }
+    }
+
+    public String getTextoAtual() {
+        return textoAtual;
+    }
+
+    public static void main(String[] args) {
+        EditorTexto editor = new EditorTexto(5); // Histórico de até 5 estados
+
+        editor.inserirTexto("Olá");
+        editor.inserirTexto("Olá mundo");
+        editor.desfazer();
+        editor.refazer();
+        editor.inserirTexto("Olá mundo!");
+        editor.desfazer();
+        editor.desfazer();
+        editor.desfazer();
+        editor.refazer();
+        editor.refazer();
+        editor.inserirTexto("Olá mundo Java!");
+        editor.desfazer();
+        editor.desfazer();
+        editor.desfazer();
+        editor.desfazer();
+        editor.desfazer(); // Tentativa de desfazer além do histórico
+        editor.refazer();
+        editor.refazer();
+        editor.refazer();
+        editor.refazer();
+        editor.refazer(); // Tentativa de refazer além do histórico
+    }
+}
